@@ -126,7 +126,7 @@ def preprocess(path, img_w, img_h):
 def numbered_array_to_text(numbered_array):
     # numbered_array = numbered_array.tol
     print(type(numbered_array))
-    numbered_array = numbered_array[numbered_array != -1]
+    # numbered_array = numbered_array[numbered_array != -1]
 
     letters = [' ', '!', '"', '#', '&', "'", '(', ')', '*', '+', ',', '-', '.', '/',
            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '?',
