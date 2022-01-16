@@ -1,0 +1,4 @@
+Flask
+Tensorflow-gpu
+opencv-python
+nltk

@@ -1,5 +1,7 @@
 import cv2
 import numpy as np
+
+
 #import image
 def convert_to_words(imagepath):
     image = cv2.imread(imagepath)
@@ -27,7 +29,6 @@ def convert_to_words(imagepath):
     # cv2.waitKey(0)
     # cv2.imwrite("results/thresh.png", thresh)
 
-
     # dilation
     kernel = np.ones((1, 100), np.uint8)
     # kernel = np.ones((100, 10), np.uint8)
@@ -36,34 +37,34 @@ def convert_to_words(imagepath):
     # cv2.waitKey(0)
     # cv2.imwrite("results/dilated.png", img_dilation)
 
-
     # find contours
-    ctrs, hier = cv2.findContours(
-        img_dilation.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    ctrs, hier = cv2.findContours(img_dilation.copy(), cv2.RETR_EXTERNAL,
+                                  cv2.CHAIN_APPROX_SIMPLE)
 
     # sort contours
     sorted_ctrs = sorted(ctrs, key=lambda ctr: cv2.boundingRect(ctr)[0])
-    count=0
+    count = 0
     for i, ctr in enumerate(sorted_ctrs):
         # Get bounding box
         x, y, w, h = cv2.boundingRect(ctr)
 
         # Getting ROI
-        roi = image[y:y+h, x:x+w]
+        roi = image[y:y + h, x:x + w]
 
-        kernel_word = np.ones((100, 15), np.uint8)
+        kernel_word = np.ones((100, 30), np.uint8)
         gray_word = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
 
-        ret_word, thresh_word = cv2.threshold(
-            gray_word, 127, 255, cv2.THRESH_BINARY_INV)
+        ret_word, thresh_word = cv2.threshold(gray_word, 127, 255,
+                                              cv2.THRESH_BINARY_INV)
 
         img_dilation_word = cv2.dilate(thresh_word, kernel_word, iterations=1)
 
-        ctrs_word, hier_word = cv2.findContours(
-            img_dilation_word.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        ctrs_word, hier_word = cv2.findContours(img_dilation_word.copy(),
+                                                cv2.RETR_EXTERNAL,
+                                                cv2.CHAIN_APPROX_SIMPLE)
 
-        sorted_ctrs_words = sorted(
-            ctrs_word, key=lambda ctr: cv2.boundingRect(ctr)[0])
+        sorted_ctrs_words = sorted(ctrs_word,
+                                   key=lambda ctr: cv2.boundingRect(ctr)[0])
 
         for j, ctr_word in enumerate(sorted_ctrs_words):
             x_word, y_word, w_word, h_word = cv2.boundingRect(ctr_word)
@@ -71,9 +72,9 @@ def convert_to_words(imagepath):
             #             w_word, y_word + h_word), (84, 24, 62), 2)
             # cv2.rectangle(image_1, (x + x_word, y + y_word), (x + x_word +
             #             w_word, y + y_word + h_word), (84, 24, 62), 2)
-            word = image_1[y + y_word: y + y_word + h_word, x + x_word: x + x_word +
-                           w_word]
-            cv2.imwrite("words/" + str(count+1) + ".png", word)
+            word = gray[y + y_word:y + y_word + h_word,
+                        x + x_word:x + x_word + w_word]
+            cv2.imwrite("words/" + str(count + 1) + ".png", word)
             count += 1
 
         # show ROI
@@ -89,7 +90,6 @@ def convert_to_words(imagepath):
         # cv2.imshow('marked areas', image_1)
         # cv2.waitKey(0)
         # cv2.imwrite("results/words.png", image_1)
-
 
         # cv2.imshow('marked areas', image)
         # cv2.waitKey(0)

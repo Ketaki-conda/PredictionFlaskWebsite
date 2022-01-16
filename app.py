@@ -6,23 +6,26 @@ import converttolines
 import predict
 
 app = Flask(__name__)
- 
+
 UPLOAD_FOLDER = 'static/uploads/'
- 
+
 app.secret_key = "secret key"
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
- 
+
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
- 
+
+
 def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-     
- 
+    return '.' in filename and filename.rsplit(
+        '.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
 @app.route('/')
 def home():
     return render_template('index.html')
- 
+
+
 @app.route('/', methods=['POST'])
 def upload_image():
     if 'file' not in request.files:
@@ -38,24 +41,26 @@ def upload_image():
         #print('upload_image filename: ' + filename)
         flash('Image successfully uploaded and displayed below')
         converttolines.convert_to_words("static/uploads/" + filename)
-        directory="words"
+        directory = "words"
         arr = [""] * len(os.listdir(directory))
         for filename in os.listdir(directory):
-            arr[int(filename.split(".")[0]) - 1]  = predict.predict("words/" + filename)
-            print("words/" + filename)
-        return render_template('index.html', filename=filename, text = " ".join(arr))
+            arr[int(filename.split(".")[0]) - 1] = predict.predict("words/" +
+                                                                   filename)
+            # print("words/" + filename)
+        return render_template('index.html',
+                               filename=filename,
+                               text=" ".join(arr))
     else:
         flash('Allowed image types are - png, jpg, jpeg, gif')
         return redirect(request.url)
- 
+
+
 @app.route('/display/<filename>')
 def display_image(filename):
     #print('display_image filename: ' + filename)
-    return redirect(url_for('static', filename='uploads/' + filename), code=301)
+    return redirect(url_for('static', filename='uploads/' + filename),
+                    code=301)
 
-
- 
 
 if __name__ == "__main__":
     app.run()
-
