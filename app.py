@@ -3,7 +3,7 @@ import urllib.request
 import os
 from werkzeug.utils import secure_filename
 import converttolines
-import predict
+import answer
 
 app = Flask(__name__)
 
@@ -44,9 +44,8 @@ def upload_image():
         directory = "words"
         arr = [""] * len(os.listdir(directory))
         for filename in os.listdir(directory):
-            arr[int(filename.split(".")[0]) - 1] = predict.predict("words/" +
-                                                                   filename)
-            # print("words/" + filename)
+            arr[int(filename.split(".")[0]) - 1] = answer.answer("words/" +
+                                                                 filename)
         return render_template('index.html',
                                filename=filename,
                                text=" ".join(arr))
