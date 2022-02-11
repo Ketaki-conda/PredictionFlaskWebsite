@@ -120,7 +120,7 @@ def predict(imagepath):
     loss_out = layers.Lambda(ctc_lambda_func, output_shape=(1, ), name='ctc')(
         [iam_outputs, labels, input_length, label_length])
     iam_model_pred = Model(inputs=input_data, outputs=iam_outputs)
-    iam_model_pred.load_weights(filepath='HandwrittenWordsModel-Try2.h5')
+    iam_model_pred.load_weights(filepath='HandwrittenWordsModel-Try3.h5')
 
     test_predictions_encoded = iam_model_pred.predict(x=image)
     test_predictions_decoded = tf_keras_backend.get_value(
