@@ -1,12 +1,13 @@
 import predict
 import nltk
-
+import re
 nltk.download('words')
 from nltk.corpus import words
 import difflib
 
 
 def answer(imagepath):
+    sp = '[@_!#$%^&*()<>?.,/\|}{~:]'
     answer = predict.predict(imagepath)
     print(answer)
     word_list = words.words()
@@ -14,4 +15,6 @@ def answer(imagepath):
     if(len(arr) > 0):
         return arr[0]
     else:
-        return ""
+        if(answer in sp or answer[1:] in sp):
+            return ""
+        return answer[1:]

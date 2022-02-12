@@ -33,8 +33,8 @@ def convert_to_words(imagepath):
     kernel = np.ones((1, 100), np.uint8)
     # kernel = np.ones((100, 10), np.uint8)
     img_dilation = cv2.dilate(thresh, kernel, iterations=1)
-    # cv2.imshow('dilated', img_dilation)
-    # cv2.waitKey(0)
+    cv2.imshow('dilated', img_dilation)
+    cv2.waitKey(0)
     # cv2.imwrite("results/dilated.png", img_dilation)
 
     # find contours
@@ -44,14 +44,16 @@ def convert_to_words(imagepath):
     # sort contours
     sorted_ctrs = sorted(ctrs, key=lambda ctr: cv2.boundingRect(ctr)[0])
     count = 0
-    for i, ctr in enumerate(sorted_ctrs):
+    c = 0
+    for i, ctr in enumerate(reversed(sorted_ctrs)):
         # Get bounding box
         x, y, w, h = cv2.boundingRect(ctr)
 
         # Getting ROI
         roi = image[y:y + h, x:x + w]
-
-        kernel_word = np.ones((100, 30), np.uint8)
+        # cv2.imwrite("lines/" + str(c) + ".png", roi)
+        # c += 1 
+        kernel_word = np.ones((100, 10), np.uint8)
         gray_word = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
 
         ret_word, thresh_word = cv2.threshold(gray_word, 127, 255,
@@ -68,10 +70,10 @@ def convert_to_words(imagepath):
 
         for j, ctr_word in enumerate(sorted_ctrs_words):
             x_word, y_word, w_word, h_word = cv2.boundingRect(ctr_word)
-            # cv2.rectangle(roi, (x_word, y_word), (x_word +
-            #             w_word, y_word + h_word), (84, 24, 62), 2)
-            # cv2.rectangle(image_1, (x + x_word, y + y_word), (x + x_word +
-            #             w_word, y + y_word + h_word), (84, 24, 62), 2)
+            cv2.rectangle(roi, (x_word, y_word), (x_word +
+                        w_word, y_word + h_word), (84, 24, 62), 2)
+            cv2.rectangle(image_1, (x + x_word, y + y_word), (x + x_word +
+                        w_word, y + y_word + h_word), (84, 24, 62), 2)
             word = gray[y + y_word:y + y_word + h_word,
                         x + x_word:x + x_word + w_word]
             cv2.imwrite("words/" + str(count + 1) + ".png", word)
@@ -94,3 +96,5 @@ def convert_to_words(imagepath):
         # cv2.imshow('marked areas', image)
         # cv2.waitKey(0)
         # cv2.imwrite("results/result.png", image)
+
+# convert_to_words("abcde.jpeg")
